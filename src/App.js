@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import Header from "./compoments/Header";
+import "./App.css";
+
+import Cart from "./compoments/Cart/Cart";
+import InventoryItems from "./compoments/InventoryItems";
+import { useState } from "react";
+import ShowDetails from "./compoments/ShowDetails";
+import CartProvider from "./compoments/Store/CartProvider";
 
 function App() {
+  const [inventories,setInventories] = useState([]);
+  const [cartIsShown,setCartIsShown]=useState(false);
+  const showCartHandler=()=> {
+    setCartIsShown(true)
+  }
+  const hideCartHandler=()=> {
+    setCartIsShown(false)
+  }
+
+
+  const handleInventoryDetails = (Inventory) => {
+    setInventories((prev) => [...prev, Inventory]);
+    
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <CartProvider>
+    {cartIsShown &&   <Cart onClose={hideCartHandler}/> }
+      <Header onShowCart={showCartHandler} />
+      <main>
+        <InventoryItems handleDetails={handleInventoryDetails}></InventoryItems>
+        <ShowDetails inventories={inventories} />
+      </main>
+    </CartProvider>
   );
 }
 
